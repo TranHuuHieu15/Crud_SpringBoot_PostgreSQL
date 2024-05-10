@@ -1,5 +1,6 @@
 package hieutran.crud.exception;
 
+import hieutran.crud.dto.response.ResponseError;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -9,18 +10,19 @@ import java.time.LocalDateTime;
 @ResponseStatus(value = HttpStatus.CONFLICT)
 public class ResourceConflictException extends RuntimeException{
 
-    private ErrorResponse errorResponse;
+    private ResponseError responseError;
 
     public ResourceConflictException(String message) {
         super(message);
-        errorResponse = new ErrorResponse();
-        errorResponse.setStatus(HttpStatus.CONFLICT.value());
-        errorResponse.setError(HttpStatus.CONFLICT.getReasonPhrase());
-        errorResponse.setMessage(message);
-        errorResponse.setTimestamp(LocalDateTime.now());
+        responseError = ResponseError.builder()
+                .status(HttpStatus.CONFLICT.value())
+                .timestamp(LocalDateTime.now())
+                .error(HttpStatus.CONFLICT.getReasonPhrase())
+                .message(message)
+                .build();
     }
 
-    public ErrorResponse getErrorResponse() {
-        return errorResponse;
+    public ResponseError getErrorResponse() {
+        return responseError;
     }
 }

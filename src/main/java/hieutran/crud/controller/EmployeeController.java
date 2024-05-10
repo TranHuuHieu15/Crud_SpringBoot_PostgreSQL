@@ -1,10 +1,10 @@
 package hieutran.crud.controller;
 
 import hieutran.crud.dto.EmployeeDto;
+import hieutran.crud.dto.response.ResponseSuccess;
 import hieutran.crud.service.EmployeeService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,37 +18,37 @@ public class EmployeeController {
 
     //! Tạo mới một employee
     @PostMapping
-    public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto) {
+    public ResponseSuccess<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto) {
         EmployeeDto saveEmployee = employeeService.createEntity(employeeDto);
-        return new ResponseEntity<>(saveEmployee, HttpStatus.CREATED);
+        return new ResponseSuccess<>(HttpStatus.CREATED.value(), "Create employee successfully", saveEmployee);
     }
 
     //! Lấy thông tin của một employee theo id
     @GetMapping("{employeeId}")
-    public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable("employeeId") Long employeeId) {
+    public ResponseSuccess<EmployeeDto> getEmployeeById(@PathVariable("employeeId") Long employeeId) {
         EmployeeDto employeeDto = employeeService.getEmployeeById(employeeId);
-        return ResponseEntity.ok(employeeDto);
+        return new ResponseSuccess<>(HttpStatus.OK.value(), "Get employee successfully", employeeDto);
     }
 
     //! Lấy thông tin của tất cả employee
     @GetMapping
-     public ResponseEntity<List<EmployeeDto>> getAllEmployees() {
+     public ResponseSuccess<List<EmployeeDto>> getAllEmployees() {
         List<EmployeeDto> employees = employeeService.getAllEmployees();
-        return ResponseEntity.ok(employees);
+        return new ResponseSuccess<>(HttpStatus.OK.value(), "Get all employees successfully", employees);
     }
 
     //! Cập nhật thông tin của một employee
     @PutMapping("{employeeId}")
-    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable("employeeId") Long employeeId, @RequestBody EmployeeDto employeeDto) {
+    public ResponseSuccess<EmployeeDto> updateEmployee(@PathVariable("employeeId") Long employeeId, @RequestBody EmployeeDto employeeDto) {
         EmployeeDto updateEmployee = employeeService.updateEmployee(employeeId, employeeDto);
-        return ResponseEntity.ok(updateEmployee);
+        return new ResponseSuccess<>(HttpStatus.OK.value(), "Update employee successfully");
     }
 
     //! Xóa một employee
     @DeleteMapping("{employeeId}")
-    public ResponseEntity<String> deleteEmployee(@PathVariable("employeeId") Long employeeId) {
+    public ResponseSuccess<String> deleteEmployee(@PathVariable("employeeId") Long employeeId) {
         employeeService.deleteEmployee(employeeId);
-        return ResponseEntity.ok("Delete success!"); 
+        return new ResponseSuccess<>(HttpStatus.OK.value(), "Delete employee successfully");
     }
 
 }
