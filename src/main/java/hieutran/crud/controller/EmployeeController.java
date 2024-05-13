@@ -3,6 +3,7 @@ package hieutran.crud.controller;
 import hieutran.crud.dto.EmployeeDto;
 import hieutran.crud.dto.response.ResponseSuccess;
 import hieutran.crud.service.EmployeeService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class EmployeeController {
 
     //! Tạo mới một employee
     @PostMapping
-    public ResponseSuccess<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto) {
+    public ResponseSuccess<EmployeeDto> createEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
         EmployeeDto saveEmployee = employeeService.createEntity(employeeDto);
         return new ResponseSuccess<>(HttpStatus.CREATED.value(), "Create employee successfully", saveEmployee);
     }
@@ -39,7 +40,7 @@ public class EmployeeController {
 
     //! Cập nhật thông tin của một employee
     @PutMapping("{employeeId}")
-    public ResponseSuccess<EmployeeDto> updateEmployee(@PathVariable("employeeId") Long employeeId, @RequestBody EmployeeDto employeeDto) {
+    public ResponseSuccess<String> updateEmployee(@PathVariable("employeeId") Long employeeId, @Valid @RequestBody EmployeeDto employeeDto) {
         EmployeeDto updateEmployee = employeeService.updateEmployee(employeeId, employeeDto);
         return new ResponseSuccess<>(HttpStatus.OK.value(), "Update employee successfully");
     }
