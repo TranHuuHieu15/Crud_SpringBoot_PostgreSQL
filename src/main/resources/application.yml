@@ -1,0 +1,8 @@
+#Cấu hình swagger trong spring boot
+open:
+  api:
+    title: CRUD Spring Boot PostgreSQL
+    description: CRUD Spring Boot PostgreSQL
+    version: 1.0.0
+    serverUrl: https://localhost:8080
+    serverName: server test
