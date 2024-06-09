@@ -45,6 +45,19 @@ public class EmployeeController {
         return new ResponseSuccess<>(HttpStatus.OK.value(), Translator.toLocale("employee.getAll.success"), employees);
     }
 
+    @Operation(summary = "Get all employees with pagination", description = "Get all employees with pagination")
+    //! Lấy thông tin của tất cả employee với phân trang
+    @GetMapping("pageable")
+    public ResponseSuccess<List<EmployeeDto>> getAllEmployees
+            (
+                    @RequestParam(value = "page", defaultValue = "1") int page,
+                    @RequestParam(value = "size", defaultValue = "10") int size,
+                    @RequestParam(value = "sort", defaultValue = "id") String sort
+            ) {
+        List<EmployeeDto> employees = employeeService.getAllEmployees(page, size, sort).getContent();
+        return new ResponseSuccess<>(HttpStatus.OK.value(), Translator.toLocale("employee.getAll.success"), employees);
+    }
+
     @Operation(summary = "Update an employee by id", description = "Update an employee by id")
     //! Cập nhật thông tin của một employee
     @PutMapping("{employeeId}")

@@ -17,7 +17,7 @@ public class EmployeeMapper {
     //! Chuyển đổi từ EmployeeDto sang Employee
     public static Employee mapToEmployee(EmployeeDto employeeDto) {
         return Employee.builder()
-                .id(employeeDto.getId())
+//                .id(employeeDto.getId())
                 .firstName(employeeDto.getFirstName())
                 .lastName(employeeDto.getLastName())
                 .email(employeeDto.getEmail())
