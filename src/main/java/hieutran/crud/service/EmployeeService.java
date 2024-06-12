@@ -1,7 +1,7 @@
 package hieutran.crud.service;
 
 import hieutran.crud.dto.EmployeeDto;
-import org.springframework.data.domain.Page;
+import hieutran.crud.dto.response.PageResponse;
 
 import java.util.List;
 
@@ -13,7 +13,9 @@ public interface EmployeeService {
 
     List<EmployeeDto> getAllEmployees();
 
-    Page<EmployeeDto> getAllEmployees(int page, int size, String sort);
+    PageResponse<?> getAllEmployees(int page, int size, String sort);
+
+    PageResponse<?> getAllEmployeesWithSortByMultipleFields(int page, int size, String... sort);
 
     EmployeeDto updateEmployee(Long employeeId, EmployeeDto employeeDto);
 

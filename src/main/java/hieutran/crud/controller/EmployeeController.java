@@ -48,14 +48,25 @@ public class EmployeeController {
     @Operation(summary = "Get all employees with pagination", description = "Get all employees with pagination")
     //! Lấy thông tin của tất cả employee với phân trang
     @GetMapping("pageable")
-    public ResponseSuccess<List<EmployeeDto>> getAllEmployees
+    public ResponseSuccess<?> getAllEmployees
             (
                     @RequestParam(value = "page", defaultValue = "1") int page,
                     @RequestParam(value = "size", defaultValue = "10") int size,
                     @RequestParam(value = "sort", defaultValue = "id") String sort
             ) {
-        List<EmployeeDto> employees = employeeService.getAllEmployees(page, size, sort).getContent();
-        return new ResponseSuccess<>(HttpStatus.OK.value(), Translator.toLocale("employee.getAll.success"), employees);
+        return new ResponseSuccess<>(HttpStatus.OK.value(), Translator.toLocale("employee.getAll.success"), employeeService.getAllEmployees(page, size, sort));
+    }
+
+    @Operation(summary = "Get all employees with pagination and with sort by multiple fields", description = "Get all employees with pagination")
+    //! Lấy thông tin của tất cả employee với phân trang
+    @GetMapping("list")
+    public ResponseSuccess<?> getAllEmployeesWithSortByMultipleFields
+            (
+                    @RequestParam(value = "page", defaultValue = "1", required = false) int page,
+                    @RequestParam(value = "size", defaultValue = "10", required = false) int size,
+                    @RequestParam(required = false) String... sort
+            ) {
+        return new ResponseSuccess<>(HttpStatus.OK.value(), Translator.toLocale("employee.getAll.success"), employeeService.getAllEmployeesWithSortByMultipleFields(page, size, sort));
     }
 
     @Operation(summary = "Update an employee by id", description = "Update an employee by id")
