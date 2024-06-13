@@ -69,6 +69,19 @@ public class EmployeeController {
         return new ResponseSuccess<>(HttpStatus.OK.value(), Translator.toLocale("employee.getAll.success"), employeeService.getAllEmployeesWithSortByMultipleFields(page, size, sort));
     }
 
+    @Operation(summary = "Get all employees with pagination and with sort by column and search", description = "Get all employees with pagination and search")
+    //! Lấy thông tin của tất cả employee với phân trang và tìm kiếm
+    @GetMapping("list-search")
+    public ResponseSuccess<?> getAllEmployeesWithSortByColumnAndSearch
+            (
+                    @RequestParam(value = "pageNo", defaultValue = "1", required = false) int page,
+                    @RequestParam(value = "pageSize", defaultValue = "10", required = false) int size,
+                    @RequestParam(required = false) String search,
+                    @RequestParam(required = false) String sortBy
+            ) {
+        return new ResponseSuccess<>(HttpStatus.OK.value(), Translator.toLocale("employee.getAll.success"), employeeService.getAllEmployeesWithSortByColumnAndSearch(page, size, search, sortBy));
+    }
+
     @Operation(summary = "Update an employee by id", description = "Update an employee by id")
     //! Cập nhật thông tin của một employee
     @PutMapping("{employeeId}")

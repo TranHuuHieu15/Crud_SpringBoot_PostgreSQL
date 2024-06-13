@@ -7,6 +7,7 @@ import hieutran.crud.exception.ResourceConflictException;
 import hieutran.crud.exception.ResourceNotFoundException;
 import hieutran.crud.mapper.EmployeeMapper;
 import hieutran.crud.repository.EmployeeRepository;
+import hieutran.crud.repository.SearchRepository;
 import hieutran.crud.service.EmployeeService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,9 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
+
     private EmployeeRepository employeeRepository;
+    private SearchRepository searchRepository;
 
     @Override
     public EmployeeDto createEntity(EmployeeDto employeeDto) {
@@ -130,6 +133,11 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .items(employees.stream().map(EmployeeMapper::mapToEmployeeDTo).collect(Collectors.toList()))
                 .build();
 //        return employees.stream().map(EmployeeMapper::mapToEmployeeDTo).collect(Collectors.toList());
+    }
+
+    @Override
+    public PageResponse<?> getAllEmployeesWithSortByColumnAndSearch(int pageNo, int pageSize, String search, String sortBy) {
+        return searchRepository.getAllEmployeesWithSortByColumnAndSearch(pageNo, pageSize, search, sortBy);
     }
 
     @Override

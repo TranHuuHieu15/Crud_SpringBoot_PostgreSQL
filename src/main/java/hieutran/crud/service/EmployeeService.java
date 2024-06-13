@@ -17,6 +17,8 @@ public interface EmployeeService {
 
     PageResponse<?> getAllEmployeesWithSortByMultipleFields(int page, int size, String... sort);
 
+    PageResponse<?> getAllEmployeesWithSortByColumnAndSearch(int pageNo, int pageSize, String search, String sortBy);
+
     EmployeeDto updateEmployee(Long employeeId, EmployeeDto employeeDto);
 
     void deleteEmployee(Long employeeId);

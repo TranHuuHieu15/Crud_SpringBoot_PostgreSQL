@@ -11,7 +11,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@Entity(name = "Employee")
 @Table(name = "employees")
 @Builder
 public class Employee extends AbstractEntity {
