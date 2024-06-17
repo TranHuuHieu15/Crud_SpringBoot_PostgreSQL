@@ -1,16 +1,23 @@
 package hieutran.crud.repository;
 
+import hieutran.crud.criteria.EmployeeSearchCriteriaQueryConsumer;
+import hieutran.crud.criteria.SearchCriteria;
 import hieutran.crud.dto.response.PageResponse;
+import hieutran.crud.entity.Employee;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -74,4 +81,57 @@ public class SearchRepository {
                 .items(page.stream().toList())
                 .build();
     }
+
+    public PageResponse<?> advancedSearchEmployee(int pageNo, int pageSize, String sortBy, String... search) {
+        List<SearchCriteria> criteriaList = new ArrayList<>();
+        //lay ra danh sach employee
+        if (search != null) {
+            for (String s : search) {
+                Pattern pattern = Pattern.compile("(\\w+?)([:><])(.*)");
+                Matcher matcher = pattern.matcher(s);
+                if (matcher.find()) {
+                    criteriaList.add(new SearchCriteria(matcher.group(1), matcher.group(2), matcher.group(3)));
+                }
+            }
+        }
+        //lay ra so luong ban ghi
+        List<Employee> employees = getEmployee(pageNo, pageSize, criteriaList, sortBy);
+
+        return PageResponse.builder()
+                .pageNo(pageNo)
+                .pageSize(pageSize)
+                .totalPages(employees.size() / pageSize + 1)
+                .items(employees)
+                .build();
+    }
+
+    private List<Employee> getEmployee(int pageNo, int pageSize, List<SearchCriteria> criteriaList, String sortBy) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Employee> query = criteriaBuilder.createQuery(Employee.class);
+        Root<Employee> root = query.from(Employee.class);
+
+        // xu ly cac dieu kien tim kiem
+        Predicate predicate = criteriaBuilder.conjunction();
+        EmployeeSearchCriteriaQueryConsumer queryConsumer = new EmployeeSearchCriteriaQueryConsumer(criteriaBuilder, predicate, root);
+        criteriaList.forEach(queryConsumer);
+        predicate = queryConsumer.getPredicate();
+
+        query.where(predicate);
+
+        if (StringUtils.hasLength(sortBy)) {
+            Pattern pattern = Pattern.compile("(\\w+?)(:)(ASC|DESC|asc|desc)");
+            Matcher matcher = pattern.matcher(sortBy);
+            if (matcher.find()) {
+                String columnName = matcher.group(1);
+                if (matcher.group(3).equalsIgnoreCase("ASC")) {
+                    query.orderBy(criteriaBuilder.asc(root.get(columnName)));
+                } else if (matcher.group(3).equalsIgnoreCase("DESC")) {
+                    query.orderBy(criteriaBuilder.desc(root.get(columnName)));
+                }
+            }
+        }
+
+        return entityManager.createQuery(query).setFirstResult(pageNo).setMaxResults(pageSize).getResultList();
+    }
+
 }

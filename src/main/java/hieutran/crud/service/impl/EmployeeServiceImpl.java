@@ -141,6 +141,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public PageResponse<?> advancedSearchByCriteria(int pageNo, int pageSize, String sortBy, String... search) {
+        return searchRepository.advancedSearchEmployee(pageNo, pageSize, sortBy, search);
+    }
+
+    @Override
     public EmployeeDto updateEmployee(Long employeeId, EmployeeDto employeeDto) {
         Employee existingEmployee = employeeRepository.findByEmail(employeeDto.getEmail());
         if (existingEmployee != null && !existingEmployee.getId().equals(employeeId)) {
