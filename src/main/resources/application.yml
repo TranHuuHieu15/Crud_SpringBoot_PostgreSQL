@@ -5,6 +5,8 @@ spring:
     active: dev
 #    active: @spring.profiles.active@
 ---
+server:
+  port: 8080
 spring:
   config:
     activate:
@@ -16,14 +18,14 @@ open:
     description: CRUD Spring Boot PostgreSQL
     version: 1.0.0
     serverUrl: https://localhost:8080
-    serverName: server test
+    serverName: server dev
 ---
 server:
-  port: 8080
+  port: 8081
 spring:
   config:
     activate:
-      on-profile: dev
+      on-profile: test
 #Cấu hình swagger trong spring boot
 open:
   api:
@@ -46,4 +48,4 @@ open:
     description: CRUD Spring Boot PostgreSQL
     version: 1.0.0
     serverUrl: https://localhost:${server.port}
-    serverName: server test
+    serverName: server product
